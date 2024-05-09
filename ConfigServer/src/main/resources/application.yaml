@@ -11,7 +11,6 @@ spring:
           uri: https://github.com/shabbirdwd53/spring-app-config2
           clone-on-start: true
 
-
 eureka:
   instance:
     prefer-ip-address: true

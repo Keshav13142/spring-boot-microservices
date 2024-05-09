@@ -1,0 +1,57 @@
+services:
+  serviceregistry:
+    image: 'ksraotech/service-registry'
+    container_name: serviceregistry
+    ports:
+      - '8761:8761'
+
+  configserver:
+    image: 'ksraotech/config-server'
+    container_name: configserver
+    ports:
+      - '9296:9296'
+    links:
+      - serviceregistry
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
+    depends_on:
+      - serviceregistry
+
+  productservice:
+    image: 'ksraotech/product-service'
+    container_name: productservice
+    ports:
+      - '8080:8080'
+    links:
+      - configserver
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
+      - CONFIG_SERVER_URL=http://configserver:9296
+    depends_on:
+      - configserver
+
+  paymentservice:
+    image: 'ksraotech/payment-service'
+    container_name: paymentservice
+    ports:
+      - '8081:8081'
+    links:
+      - configserver
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
+      - CONFIG_SERVER_URL=http://configserver:9296
+    depends_on:
+      - productservice
+
+  orderservice:
+    image: 'ksraotech/order-service'
+    container_name: orderservice
+    ports:
+      - '8082:8082'
+    links:
+      - configserver
+    environment:
+      - EUREKA_SERVER_ADDRESS=http://serviceregistry:8761/eureka
+      - CONFIG_SERVER_URL=http://configserver:9296
+    depends_on:
+      - paymentservice
