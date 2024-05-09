@@ -1,4 +1,4 @@
-# Spring boot and Microservice with Kubernetes
+# Spring boot and Microservices
 
 ## Building image
 
